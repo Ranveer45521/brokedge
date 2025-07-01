@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BrokEdge - Blog</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+<style>
+  body { font-family: 'Inter', sans-serif; }
+</style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+<!-- Header -->
+<header class="bg-[#0F172A] text-white shadow-md">
+  <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+    <h1 class="text-2xl font-bold">BrokEdge</h1>
+    <nav class="space-x-6 hidden md:flex">
+      <a href="index.html#calculator" class="hover:text-yellow-400">Calculator</a>
+      <a href="index.html#compare" class="hover:text-yellow-400">Compare Brokers</a>
+      <a href="blog.html" class="hover:text-yellow-400">Blog</a>
+      <a href="index.html#contact" class="hover:text-yellow-400">Contact</a>
+    </nav>
+    <button class="md:hidden text-xl">&#9776;</button>
+  </div>
+</header>
+
+<!-- Hero Section -->
+<section class="bg-gradient-to-r from-blue-600 to-indigo-800 text-white py-20 px-4 text-center">
+  <h2 class="text-4xl font-bold mb-4">Our Blog</h2>
+  <p class="text-lg mb-6">Explore expert insights, trading tips, and the latest updates in the world of brokers.</p>
+</section>
+
+<!-- Blog Posts Section -->
+<section class="max-w-6xl mx-auto py-16 px-4 grid gap-8 md:grid-cols-3" id="blogsContainer">
+  <!-- Dynamic blog posts will be injected here -->
+</section>
+
+<!-- Script to load blogs dynamically -->
+<script>
+fetch('blogs.json')
+  .then(response => response.json())
+  .then(data => {
+    const blogPostsContainer = document.getElementById('blogPosts');
+    blogPostsContainer.innerHTML = '';
+    data.forEach(post => {
+      const blogEl = document.createElement('div');
+      blogEl.classList.add('bg-white', 'p-6', 'rounded', 'shadow');
+      blogEl.innerHTML = `
+        <h3 class="text-xl font-bold mb-2">${post.title}</h3>
+        <p class="text-gray-600 mb-4 text-sm">${post.date}</p>
+        <p>${post.summary}</p>
+        <a href="#" class="text-blue-500 hover:underline mt-2 inline-block">Read more</a>
+      `;
+      blogPostsContainer.appendChild(blogEl);
+    });
+  })
+  .catch(error => {
+    document.getElementById('blogPosts').innerHTML = '<p>Failed to load blogs. Please try again later.</p>';
+    console.error(error);
+  });
+</script>
+
+</body>
+</html>

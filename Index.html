@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BrokEdge - Compare Demat Accounts</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+<style>
+  body { font-family: 'Inter', sans-serif; }
+</style>
+</head>
+<body class="bg-white text-gray-800">
+
+<!-- Navigation Bar -->
+<header class="bg-[#0F172A] text-white shadow-md">
+  <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+    <h1 class="text-2xl font-bold">BrokEdge</h1>
+    <nav class="space-x-6 hidden md:flex">
+      <a href="#calculator" class="hover:text-yellow-400">Calculator</a>
+      <a href="#compare" class="hover:text-yellow-400">Compare Brokers</a>
+      <a href="blog.html" class="hover:text-yellow-400">Blog</a>
+      <a href="#contact" class="hover:text-yellow-400">Contact</a>
+    </nav>
+    <button class="md:hidden text-xl">&#9776;</button>
+  </div>
+</header>
+
+<!-- Hero Section -->
+<section class="bg-gradient-to-r from-blue-600 to-indigo-800 text-white py-20 px-4">
+  <div class="max-w-7xl mx-auto text-center">
+    <h2 class="text-4xl font-bold mb-4">Compare Demat Accounts & Brokerage Charges</h2>
+    <p class="text-lg mb-6">Find the best broker for your trading style. Accurate cost comparison with our smart calculator.</p>
+    <a href="#calculator" class="bg-yellow-400 text-black px-6 py-3 rounded-full font-semibold hover:bg-yellow-300 transition">Try the Calculator</a>
+  </div>
+</section>
+
+<!-- Standard Brokerage Calculator Section -->
+<section id="calculator" class="py-16 px-4 bg-gray-50">
+  <div class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-md mb-10">
+    <h2 class="text-2xl font-bold mb-6 text-center">Standard Brokerage Calculator</h2>
+    <label class="block mb-2">Choose Broker:</label>
+    <select id="broker" class="w-full p-2 border mb-4">
+      <option value="zerodha">Zerodha</option>
+      <option value="upstox">Upstox</option>
+      <option value="groww">Groww</option>
+      <option value="angelone">Angel One</option>
+      <option value="icici">ICICI Direct</option>
+    </select>
+
+    <label class="block mb-2">Market Segment:</label>
+    <select id="segment" class="w-full p-2 border mb-4">
+      <option value="nse">NSE</option>
+      <option value="bse">BSE</option>
+    </select>
+
+    <label class="block mb-2">Order Type:</label>
+    <select id="orderType" class="w-full p-2 border mb-4">
+      <option value="delivery">Delivery</option>
+      <option value="intraday">Intraday</option>
+      <option value="futures">Futures</option>
+      <option value="options">Options</option>
+      <option value="currency">Currency</option>
+      <option value="commodities">Commodities</option>
+      <option value="mtf">MTF</option>
+    </select>
+
+    <label class="block mb-2">Buy Price:</label>
+    <input type="number" id="buyPrice" placeholder="Enter buy price" class="w-full p-2 border mb-4" />
+
+    <label class="block mb-2">Sell Price:</label>
+    <input type="number" id="sellPrice" placeholder="Enter sell price" class="w-full p-2 border mb-4" />
+
+    <label class="block mb-2">Quantity:</label>
+    <input type="number" id="quantity" placeholder="Enter quantity" class="w-full p-2 border mb-4" />
+
+    <button onclick="calculateCharges()" class="bg-blue-600 text-white p-2 w-full rounded hover:bg-blue-700">Calculate Charges</button>
+
+    <div class="mt-6 bg-gray-100 p-4 rounded" id="results"></div>
+  </div>
+
+  <!-- Custom Brokerage Calculator (Upgraded) -->
+  <div class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold mb-6 text-center">Custom Brokerage Calculator</h2>
+
+    <label class="block mb-2">Broker Name:</label>
+    <input type="text" id="brokerName" placeholder="Enter broker name" class="w-full p-2 border mb-4" />
+
+    <label class="block mb-2">Segment:</label>
+    <select id="customSegment" class="w-full p-2 border mb-4">
+      <option value="delivery">Equity Delivery</option>
+      <option value="intraday">Equity Intraday</option>
+      <option value="futures">Futures</option>
+      <option value="options">Options</option>
+    </select>
+
+    <label class="block mb-2">Calculate Brokerage On:</label>
+    <select id="brokerageOn" class="w-full p-2 border mb-4">
+      <option value="both">Both (Buy & Sell)</option>
+      <option value="buy">Buy Only</option>
+      <option value="sell">Sell Only</option>
+    </select>
+
+    <label class="block mb-2">Buy Price:</label>
+    <input type="number" id="buyPriceCustom" step="0.01" class="w-full p-2 border mb-4" />
+
+    <label class="block mb-2">Sell Price:</label>
+    <input type="number" id="sellPriceCustom" step="0.01" class="w-full p-2 border mb-4" />
+
+    <label class="block mb-2">Quantity:</label>
+    <input type="number" id="quantityCustom" class="w-full p-2 border mb-4" />
+
+    <label class="block mb-2">Brokerage %:</label>
+    <input type="number" id="brokeragePercent" step="0.01" placeholder="e.g., 0.03 for 0.03%" class="w-full p-2 border mb-4" />
+
+    <label class="block mb-2">Min Brokerage (₹):</label>
+    <input type="number" id="brokerageMin" placeholder="e.g., 20" class="w-full p-2 border mb-4" />
+
+    <label class="block mb-2">Max Brokerage (₹):</label>
+    <input type="number" id="brokerageMax" placeholder="e.g., 18" class="w-full p-2 border mb-4" />
+
+    <label class="block mb-2">STT/CTT %:</label>
+    <input type="number" id="sttPercent" step="0.01" placeholder="e.g., 0.1 for 0.1%" class="w-full p-2 border mb-4" />
+
+    <label class="block mb-2">Transaction Charges %:</label>
+    <input type="number" id="txnCharges" step="0.00001" placeholder="e.g., 0.00297 for NSE" class="w-full p-2 border mb-4" />
+
+    <label class="block mb-2">SEBI Charges (₹/crore):</label>
+    <input type="number" id="sebiCharges" placeholder="e.g., 10" class="w-full p-2 border mb-4" />
+
+    <label class="block mb-2">GST %:</label>
+    <input type="number" id="gstPercent" step="0.01" placeholder="e.g., 18" class="w-full p-2 border mb-4" />
+
+    <label class="block mb-2">Stamp Duty %:</label>
+    <input type="number" id="stampPercent" step="0.01" placeholder="e.g., 0.015" class="w-full p-2 border mb-4" />
+
+    <button onclick="calculateCustom()" class="bg-blue-600 text-white p-2 w-full rounded hover:bg-blue-700">Calculate Custom Charges</button>
+
+    <div class="mt-6 bg-gray-100 p-4 rounded" id="customResults"></div>
+  </div>
+</section>
+
+<script>
+  function calculateCustom() {
+    const segment = document.getElementById("customSegment").value;
+    const side = document.getElementById("brokerageOn").value;
+    const brokerName = document.getElementById("brokerName").value.trim();
+    const buy = parseFloat(document.getElementById("buyPriceCustom").value);
+    const sell = parseFloat(document.getElementById("sellPriceCustom").value);
+    const qty = parseInt(document.getElementById("quantityCustom").value);
+    const brokeragePercent = parseFloat(document.getElementById("brokeragePercent").value) || 0;
+    const brokerageMin = parseFloat(document.getElementById("brokerageMin").value) || 0;
+    const brokerageMax = parseFloat(document.getElementById("brokerageMax").value) || Infinity;
+    const sttPercent = parseFloat(document.getElementById("sttPercent").value) || 0;
+    const txnPercent = parseFloat(document.getElementById("txnCharges").value) || 0;
+    const sebiPerCrore = parseFloat(document.getElementById("sebiCharges").value) || 0;
+    const gstPercent = parseFloat(document.getElementById("gstPercent").value) || 0;
+    const stampPercent = parseFloat(document.getElementById("stampPercent").value) || 0;
+
+    if (!brokerName || isNaN(buy) || isNaN(sell) || isNaN(qty)) {
+      alert("Please enter valid inputs.");
+      return;
+    }
+
+    const turnover = (buy + sell) * qty;
+
+    // Calculate brokerage for buy/sell/both
+    let brokerage = 0;
+    if (side === "buy" || side === "both") {
+      const brBuy = Math.max(Math.min((buy * qty) * (brokeragePercent / 100), brokerageMax), brokerageMin);
+      brokerage += brBuy;
+    }
+    if (side === "sell" || side === "both") {
+      const brSell = Math.max(Math.min((sell * qty) * (brokeragePercent / 100), brokerageMax), brokerageMin);
+      brokerage += brSell;
+    }
+
+    // STT logic: delivery on both sides, intraday only on sell
+    let stt = 0;
+    if (segment === "delivery") {
+      stt = (buy + sell) * qty * (sttPercent / 100);
+    } else if (segment === "intraday") {
+      stt = sell * qty * (sttPercent / 100);
+    } else {
+      stt = sell * qty * (sttPercent / 100); // for futures/options
+    }
+
+    const txn = turnover * (txnPercent / 100);
+    const sebi = (turnover / 1e7) * sebiPerCrore;
+    const gst = (brokerage + txn + sebi) * (gstPercent / 100);
+    const stamp = (buy * qty) * (stampPercent / 100);
+
+    const totalCharges = brokerage + stt + txn + sebi + gst + stamp;
+    const pnl = (sell - buy) * qty - totalCharges;
+
+    document.getElementById("customResults").innerHTML = `
+      <h3 class="font-semibold">Result for Broker: ${brokerName}</h3>
+      <p>Turnover: ₹${turnover.toFixed(2)}</p>
+      <p>Brokerage: ₹${brokerage.toFixed(2)}</p>
+      <p>STT/CTT: ₹${stt.toFixed(2)}</p>
+      <p>Transaction Charges: ₹${txn.toFixed(2)}</p>
+      <p>SEBI Charges: ₹${sebi.toFixed(2)}</p>
+      <p>GST: ₹${gst.toFixed(2)}</p>
+      <p>Stamp Duty: ₹${stamp.toFixed(2)}</p>
+      <p><strong>Total Charges: ₹${totalCharges.toFixed(2)}</strong></p>
+      <p><strong>Net P&L: ₹${pnl.toFixed(2)}</strong></p>
+    `;
+  }
+</script>
+<!-- Blog Section -->
+<section id="blog-section" class="py-16 px-4 bg-white">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="text-2xl font-bold mb-6 text-center">Latest Blog Posts</h2>
+      <div id="blog-container" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+    </div>
+  </section>
+  
+  <script>
+    // Function to load blogs
+    async function loadBlogs() {
+      try {
+        const response = await fetch('/api/blogs/');
+        const blogs = await response.json();
+  
+        const container = document.getElementById('blog-container');
+        container.innerHTML = '';
+  
+        blogs.forEach(blog => {
+          const blogCard = document.createElement('div');
+          blogCard.className = 'bg-gray-100 p-4 rounded shadow';
+          blogCard.innerHTML = `
+            <h3 class="font-semibold text-lg mb-2">${blog.title}</h3>
+            <p class="text-sm text-gray-700 mb-4">${blog.content.slice(0, 100)}...</p>
+            <p class="text-xs text-gray-500">Author: ${blog.author} | Date: ${new Date(blog.created_at).toLocaleDateString()}</p>
+          `;
+          container.appendChild(blogCard);
+        });
+      } catch (error) {
+        console.error('Error loading blogs:', error);
+      }
+    }
+  
+    // Load blogs on page load
+    document.addEventListener('DOMContentLoaded', loadBlogs);
+  </script>
+  
+</body>
+</html>

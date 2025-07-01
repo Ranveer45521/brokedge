@@ -1,0 +1,57 @@
+<!-- Lucide Icon CDN -->
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<!-- Footer Section -->
+<footer class="bg-[#0F172A] text-white py-10 mt-10">
+  <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+    
+    <!-- About -->
+    <div>
+      <img src="https://iili.io/FBNf59p.md.png" alt="BrokEdge Logo" class="w-32 mb-4">
+      <h3 class="text-xl font-semibold mb-2">About BrokEdge</h3>
+      <p class="text-sm text-gray-300">
+        BrokEdge helps you compare Demat accounts, understand brokerage fees, and make smarter investment decisions.
+        Accurate calculators. Clean comparisons. Real insights.
+      </p>
+    </div>
+
+    <!-- Quick Links -->
+    <div>
+      <h3 class="text-xl font-semibold mb-4">Quick Links</h3>
+      <ul class="space-y-2 text-sm">
+        <li><a href="{% url 'home' %}#calculator" class="hover:text-yellow-400">Brokerage Calculator</a></li>
+        <li><a href="{% url 'broker-comparison' %}" class="hover:text-yellow-400">Compare Brokers</a></li>
+        <li><a href="{% url 'blog-page' %}" class="hover:text-yellow-400">Blog</a></li>
+        <li><a href="{% url 'home' %}#contact" class="hover:text-yellow-400">Contact Us</a></li>
+      </ul>
+    </div>
+
+    <!-- Contact Info / Social -->
+    <div>
+      <h3 class="text-xl font-semibold mb-4">Stay Connected</h3>
+      <p class="text-sm text-gray-300 mb-2">Email: support@brokedge.in</p>
+      <p class="text-sm text-gray-300 mb-4">Phone: +91-XXXXXXXXXX</p>
+      <div class="flex space-x-4">
+        <a href="https://youtube.com/@aiblitzu" target="_blank" class="hover:text-yellow-400" aria-label="YouTube">
+          <i data-lucide="youtube" class="w-5 h-5"></i>
+        </a>
+        <a href="https://linkedin.com" target="_blank" class="hover:text-yellow-400" aria-label="LinkedIn">
+          <i data-lucide="linkedin" class="w-5 h-5"></i>
+        </a>
+        <a href="https://twitter.com" target="_blank" class="hover:text-yellow-400" aria-label="Twitter">
+          <i data-lucide="twitter" class="w-5 h-5"></i>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="text-center text-gray-400 text-sm mt-8 border-t border-gray-700 pt-4">
+    &copy; {% now "Y" %} BrokEdge. All rights reserved.
+  </div>
+</footer>
+
+<!-- Activate Lucide Icons -->
+<script>
+  lucide.createIcons();
+</script>
