@@ -6,7 +6,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # --- Security ---
 SECRET_KEY = 'django-insecure-7_o_@g9%9c_8=w8c+2)9gyj^2f&k&633(&e4el&f^xn7tvqqgd'  # ✅ Keep secret in production
 DEBUG = True  # ❗ Set to False in production
-ALLOWED_HOSTS = ['brokedge.onrender.com']  # ❗ Set this in production (e.g., ['localhost', 'yourdomain.com'])
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'brokedge.onrender.com']  # ❗ Set this in production (e.g., ['localhost', 'yourdomain.com'])
 
 # --- Installed Applications ---
 INSTALLED_APPS = [
