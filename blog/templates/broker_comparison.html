@@ -8,11 +8,24 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 <style>
   body { font-family: 'Inter', sans-serif; }
+  @keyframes pulse-slow {
+    0%, 100% { transform: scale(1); opacity: 0.4; }
+    50% { transform: scale(1.1); opacity: 0.6; }
+  }
+  .animate-pulse-slow {
+    animation: pulse-slow 10s ease-in-out infinite;
+  }
+  .animate-pulse-slower {
+    animation: pulse-slow 15s ease-in-out infinite;
+  }
 </style>
-</head>
-<body class="bg-gray-100 text-gray-800">
 
-<header class="bg-[#0F172A] text-white py-4 px-6">
+</head>
+<body class="relative min-h-screen bg-gradient-to-br from-blue-700 via-indigo-800 to-purple-800 text-black overflow-hidden">
+  <!-- Floating Background Circles -->
+  <div class="absolute -top-10 -left-10 w-72 h-72 bg-blue-500 bg-opacity-20 rounded-full animate-pulse-slow z-0"></div>
+  <div class="absolute -bottom-10 -right-10 w-56 h-56 bg-purple-400 bg-opacity-10 rounded-full animate-pulse-slower z-0"></div>
+<header class="bg-[#0F172A] text-white py-4 px-6 relative z-20">
   <div class="max-w-7xl mx-auto flex justify-between items-center">
     <a href="{% url 'home' %}" class="text-2xl font-bold hover:text-yellow-400 transition">
   BrokEdge
@@ -25,31 +38,113 @@
   </div>
 </header>
 
-<main class="max-w-6xl mx-auto py-10 px-4">
-  <h2 class="text-3xl font-bold mb-6 text-center">Compare Brokers</h2>
-  <div class="overflow-x-auto">
-    <table class="min-w-full bg-white shadow rounded">
-      <thead class="bg-gray-800 text-white">
-        <tr>
-          <th class="py-2 px-4 text-left">Name</th>
-          <th class="py-2 px-4 text-left">Brokerage Charge</th>
-          <th class="py-2 px-4 text-left">Hidden Charges</th>
-          <th class="py-2 px-4 text-left">Features</th>
-        </tr>
-      </thead>
-      <tbody id="brokerTableBody"></tbody>
-    </table>
+<main class="max-w-6xl mx-auto py-16 px-4">
+  <div class="backdrop-blur-sm bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-8 text-white">
+    <h2 class="text-3xl font-bold mb-6 text-center text-white">Compare Brokers</h2>
+    <!-- 🔍 Search Bar -->
+<div class="mb-6 text-center">
+  <input
+    type="text"
+    id="brokerSearch"
+    placeholder="Search broker name..."
+    class="w-full sm:w-1/2 px-4 py-2 rounded-xl border border-gray-300 text-black focus:ring-2 focus:ring-blue-500"
+  />
+</div>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white/5 backdrop-blur-md rounded-xl overflow-hidden text-white border border-white/10 shadow-md">
+        <thead class="bg-white/10 text-white uppercase text-sm tracking-wider">
+          <tr>
+            <th class="py-3 px-4 text-left">Name</th>
+            <th class="py-3 px-4 text-left">Brokerage Charge</th>
+            <th class="py-3 px-4 text-left">Hidden Charges</th>
+            <th class="py-3 px-4 text-left">Features</th>
+          </tr>
+        </thead>
+        <tbody id="brokerTableBody"></tbody>
+      </table>
+    </div>
   </div>
 </main>
 
+
+<!-- Add this script before your main script -->
 <script>
-fetch('/api/brokers/')
-  .then(response => response.json())
-  .then(data => {
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+</script>
+
+<script>
+  let brokersData = [];
+
+  function renderTable(data) {
     const tbody = document.getElementById('brokerTableBody');
+    tbody.innerHTML = '';
+
+    if (data.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="4" class="text-center text-white p-4">
+            <p class="text-lg font-semibold text-red-300 mb-2">No brokers found.</p>
+            <p class="mb-4">Can't find the broker you're looking for?</p>
+            <form id="suggestionForm" class="space-y-2 max-w-sm mx-auto">
+              <input type="text" id="suggestBrokerName" placeholder="Broker Name" required class="w-full px-3 py-2 rounded border border-gray-300 text-black" />
+              <input type="email" id="suggestUserEmail" placeholder="Your Email (optional)" class="w-full px-3 py-2 rounded border border-gray-300 text-black" />
+              <button type="submit" class="bg-yellow-400 hover:bg-yellow-300 text-black px-4 py-2 rounded font-semibold w-full">Submit Suggestion</button>
+              <p id="suggestionStatus" class="text-green-300 text-sm text-center hidden mt-2"></p>
+            </form>
+          </td>
+        </tr>
+      `;
+
+      setTimeout(() => {
+        const form = document.getElementById('suggestionForm');
+        const status = document.getElementById('suggestionStatus');
+
+        form?.addEventListener('submit', async e => {
+          e.preventDefault();
+          const broker = document.getElementById('suggestBrokerName').value;
+          const email = document.getElementById('suggestUserEmail').value;
+
+          try {
+            await fetch('/api/suggest-broker/', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken') || '',
+              },
+              body: JSON.stringify({ name: broker, email: email })
+            });
+            form.reset();
+            status.textContent = 'Thanks! We’ll review and add the broker soon.';
+            status.classList.remove('hidden');
+            status.classList.remove('text-red-300');
+          } catch (error) {
+            status.textContent = 'Something went wrong. Please try again.';
+            status.classList.remove('hidden');
+            status.classList.add('text-red-300');
+          }
+        });
+      }, 100);
+
+      return;
+    }
+
     data.forEach(broker => {
       const row = document.createElement('tr');
-      row.classList.add('border-b');
+      row.classList.add('border-b', 'hover:bg-white/10', 'transition');
       row.innerHTML = `
         <td class="border px-4 py-2">${broker.name}</td>
         <td class="border px-4 py-2">${broker.brokerage_charge}</td>
@@ -58,13 +153,31 @@ fetch('/api/brokers/')
       `;
       tbody.appendChild(row);
     });
-  })
-  .catch(error => {
-    document.getElementById('brokerTableBody').innerHTML =
-      '<tr><td colspan="4" class="text-center text-red-500 p-4">Failed to load brokers. Please try again later.</td></tr>';
-    console.error('Error:', error);
+  }
+
+  // Load brokers and handle search
+  fetch('/api/brokers/')
+    .then(response => response.json())
+    .then(data => {
+      brokersData = data;
+      renderTable(brokersData);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      renderTable([]);
+    });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('brokerSearch').addEventListener('input', e => {
+      const keyword = e.target.value.toLowerCase();
+      const filtered = brokersData.filter(b =>
+        b.name.toLowerCase().includes(keyword)
+      );
+      renderTable(filtered);
+    });
   });
 </script>
+
 
 </body>
 </html>

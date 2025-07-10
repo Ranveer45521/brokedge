@@ -15,3 +15,9 @@ class ContactMessageAdmin(admin.ModelAdmin):
     list_display = ('name', 'email', 'phone', 'created_at')
     search_fields = ('name', 'email', 'phone')
 
+from .models import BrokerSuggestion
+
+@admin.register(BrokerSuggestion)
+class BrokerSuggestionAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'submitted_at')
+    search_fields = ('name', 'email')

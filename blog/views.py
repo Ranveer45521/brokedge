@@ -127,3 +127,15 @@ def calculate_brokerage(request):
         })
 
     return Response(serializer.errors, status=400)
+from .models import BrokerSuggestion
+
+@api_view(['POST'])
+def submit_broker_suggestion(request):
+    name = request.data.get('name')
+    email = request.data.get('email', '')
+
+    if not name:
+        return Response({'error': 'Broker name is required.'}, status=400)
+
+    BrokerSuggestion.objects.create(name=name, email=email)
+    return Response({'success': True, 'message': "Thanks! We'll review your suggestion."})
