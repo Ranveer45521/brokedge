@@ -67,7 +67,9 @@
 <!-- Navigation Bar -->
 <header class="bg-[#0F172A] text-white shadow-md">
   <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-    <h1 class="text-2xl font-bold">BrokEdge</h1>
+    <a href="{% url 'home' %}" class="text-2xl font-bold hover:text-yellow-400 transition">
+  BrokEdge
+</a>
     <nav class="space-x-6 hidden md:flex">
       <a href="#calculator" class="hover:text-yellow-400">Calculator</a>
       <a href="{% url 'broker-comparison' %}" class="hover:text-yellow-400">Compare Brokers</a>
