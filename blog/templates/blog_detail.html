@@ -27,9 +27,9 @@
 
   <!-- Blog Content -->
   <div class="relative z-10 max-w-3xl mx-auto py-20 px-4">
-    <div class="bg-white/10 backdrop-blur-md p-8 rounded-3xl shadow-2xl border border-white/20">
+    <div class="bg-black/40 backdrop-blur-md p-8 rounded-3xl shadow-2xl border border-white/20">
       <h1 class="text-3xl sm:text-4xl font-bold mb-4">{{ blog.title }}</h1>
-      <p class="text-sm text-gray-200 mb-6">{{ blog.created_at }}</p>
+      <p class="text-sm text-gray mb-6">{{ blog.created_at }}</p>
       <div class="prose prose-invert max-w-none">
         {{ blog.content|linebreaks }}
       </div>
